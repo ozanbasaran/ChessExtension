@@ -1,0 +1,35 @@
+This will describe how to prepare to be able to complile the complex extension with windows and WSL.
+
+Download wsl from the microsoft store
+
+(in powershell) wsl --install -d Ubuntu
+-> create username
+
+(in powershell) ubuntu config --default-user root
+(in ubuntu) passwd root
+-> create a password for root
+(in powershell) ubuntu config --default-user <your username>
+
+(in ubuntu) su root
+
+(in ubuntu) apt-get update
+(in ubuntu) apt-get upgrade
+(in ubuntu) apt-get install gcc
+(in ubuntu) apt install make
+(in ubuntu) apt-get install libpq-dev
+
+(in ubuntu) sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+(in ubuntu) wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+(in ubuntu) apt-get update
+(in ubuntu) apt-get install postgresql
+(in ubuntu) apt-get install postgresql-server-dev-16
+
+Download zip with the complex extension.
+Unzip this directory.
+Paste this directory in \\wsl$\Ubuntu\home\<your username> (windows path for windows file explorer)
+
+restart your ubuntu terminal and go to your home\<your username> directory.
+Go inside (with "cd <directory or path>") till you find the Makefile in the same directory (look inside directory with "ls")
+(in ubuntu) make
+
+If the make succeeds you are ready else search your error and try to fix it.

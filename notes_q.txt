@@ -1,0 +1,132 @@
+Chessgame data type = SAN
+Chessboard data type = FEN
+
+Forsyth–Edwards Notation (FEN):
+
+6 FIELDS separated by a space:
+
+1)Piece placement data:
+A rank is a hcessboard row but describe from the persepctive of each player
+The ranks are labeled 1-8 dependeing on how close they are to the active player.
+Use of a / between ranks.
+In each rank contents are descrive from a-file to h-file
+Each piece is a signe lettre:
+(pawn = "P", knight = "N", bishop = "B", rook = "R", queen = "Q" and king = "K")
+White pieces are uppercase while black pieces are lowercase.
+Multiple consecutive empty spaces in a rank are joined and described with a nmber from 1-8 (8 meaning that rank is empty)
+
+Example starting board rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR 
+
+
+2) Active color: 
+"w" means that White is to move; "b" for black
+
+3)Castling availability:
+f neither side has the ability to castle, this field uses the character "-".
+Otherwise, this field contains one or more letters: 
+ "K" if White can castle kingside; "k" for black
+ "Q" if White can castle queenside; "q" for black
+A situation that temporarily prevents castling does not prevent the use of this notation. (The interpretation of the game is not up to us to code)
+ 
+4) En passant target square: 
+This is a square over which a pawn has just passed while moving two squares;
+"-" if none
+
+5) Halfmove clock: 
+The number of halfmoves since the last capture or pawn advance
+
+6) Fullmove number: 
+Counter that count each move (a move is when both have played)
+(a Halfmove is when only one has played this move)
+
+FEN FOR STARTING BOARD: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+
+----------------------------------
+Standard Algebraic Notation (SAM):
+Each square had a coordinate pair (letter,number) from White's point of view. 
+vertical : colums = files : [a-h] from White's left (the queenside) to right (the kingside)
+horizontal: rows = ranks : [1-8] from White's side of the board. 
+
+Each piece is determined by letter: K for king, Q for queen, R for rook, B for bishop, and N for knight (no letter is used for pawn)
+Notation for moves
+
+A move is the piece letter in uppercase folled by the destination: ex: Be5 (bishop moves to e5), e6 (pawn moves to e6)
+
+When a piece makes a capture, an "x" is inserted before the destination: ex: Bxe5 (bishop captures the piece on e5)
+When a pawn makes a capture, the file from which the pawn departed is used to identify the pawn. For example, exd5 (pawn on the e-file captures the piece on d5). (File meaning columns in this instance)
+
+move can be ambiguous so -> look at Disambiguating moves
+
+Disambiguating moves:
+When two (or more) identical pieces can move to the same square, the moving piece is uniquely identified by specifying the piece's letter, followed by (in descending order of preference):
+
+1- the file of departure (if they differ)
+2- the rank of departure (if the files are the same but the ranks differ)
+
+If neither file nor rank alone is sufficient to identify the piece, then both are specified.
+
+Pawn promotion
+When a pawn promotes, the piece promoted to is indicated at the end. For example, a pawn on e7 promoting to a queen on e8 may be variously rendered as e8Q, e8=Q, e8(Q), e8/Q etc.
+
+Castling is indicated by the special notations 0-0 (for kingside castling) and 0-0-0 (queenside castling). O-O and O-O-O (letter O rather than digit 0) are also commonly used
+
+Check 
+A move that places the opponent's king in check usually has the symbol "+" appended.
+
+
+End of game 
+The notation 1–0 at the completion of moves indicates that White won, 0–1 indicates that Black won, and ½–½ indicates a draw.
+
+Example Full Game: (Note the numberings 1. 2. etc) (This game ended after 18 moves and a half move with white winning)
+
+1.e4 e5 2.h3 d5 3.exd5 Bc5 4.Bc4 c6 5.Nc3 Nf6 6.d3 a5 7.Bg5 Nbd7 8.dxc6 bxc6
+9.Nf3 O-O 10.O-O h6 11.Bh4 Qc7 12.d4 exd4 13.Nxd4 Bd6 14.Nf5 Bh2+ 15.Kh1 Ne5
+16.Bb3 Ba6 17.Re1 Ng6 18.Bxf6 gxf6 19.Qh5  1-0
+
+---------------------
+Some possible interesting functions:
+
+SCL_Game game;
+
+SCL_gameInit(&game,startState);
+SCL_boardInit(game.board);
+
+SCL_gameMakeMove(&game,squareFrom,squareTo,movePromote);
+
+uint8_t SCL_boardToFEN(SCL_Board board, char *string);
+uint8_t SCL_boardFromFEN(SCL_Board board, const char *string);
+
+
+
+
+
+
+
+------Start----
+-----some additional common and straightforward functions. Echo 2023/11/07------------
+Certainly! In the context of a chess game, there are several other functions that may be used:
+
+1. **isValidMove(chessgame, move) -> bool**: Used to validate whether a move is legal in the current game, including checking for rule violations and whether it results in a check.
+
+2. **isCheckmate(chessgame) -> bool**: Checks if the current position is a checkmate, meaning one side's king is in check and there are no legal moves to escape.
+
+3. **isStalemate(chessgame) -> bool**: Determines if the game is a stalemate, indicating that one side has no legal moves but is not in check.
+
+4. **getLegalMoves(chessgame) -> list of moves**: Returns a list of all legal moves available in the current position for the active player.
+
+5. **isLegalPosition(chessboard) -> bool**: Validates whether a given board state is legal, including checks for legal king positions and adherence to opening rules.
+
+6. **isDrawByFiftyMoveRule(chessgame) -> bool**: Checks if the game has reached the fifty-move rule, which occurs when no captures or pawn moves have occurred in the last fifty half-moves, leading to a draw.
+
+7. **isDrawByThreefoldRepetition(chessgame) -> bool**: Determines if the game has reached a threefold repetition, meaning the same board position has occurred three times, resulting in a draw.
+
+8. **getGameResult(chessgame) -> result**: Retrieves the result of the current game, indicating whether it's a win for one side, a draw, or still ongoing.
+
+9. **getOpeningMoves(chessgame) -> list of moves**: Provides the opening moves played in the current game, helpful for studying opening theory.
+
+10. **getPieceSquareValue(chessboard, piece) -> value**: Calculates the positional value of a specific piece on the board, aiding in evaluating the overall position.
+
+11. **undoLastMove(chessgame) -> chessgame**: Allows for the undoing of the last move, useful for reanalysis or corrections in the game.
+
+These functions are commonly used in chess engines, chessboard editors, and analysis tools to manage and analyze chess games, validate rule compliance, evaluate game positions, and more.
+--------------------End----------------------------------------------------------
