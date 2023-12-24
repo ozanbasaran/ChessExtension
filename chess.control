@@ -1,0 +1,5 @@
+# chess extension
+comment = 'Chess - input/ouput functions for chessgame and chessboard types'
+default_version = '1.0'
+module_pathname = '$libdir/chess'
+relocatable = true
